@@ -15,7 +15,7 @@ CREATE TABLE if not exists SimpleUsers (
     user_doctors_file BLOB,
     user_solemn_declaration_file BLOB,
     user_has_children BOOLEAN not null default false,
-    user_acc_created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    user_acc_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     referred_by INT,
     FOREIGN KEY (referred_by) REFERENCES SimpleUsers(user_id)
 );
@@ -49,6 +49,10 @@ create table if not exists Clubs_Users(
     club_id int,
     user_id int,
     user_type ENUM('GUEST','ATHLETE','MEMBER') not null,
+    review_stars INT,
+    review_description TEXT,
+    review_likes INT DEFAULT 0,
+    review_check BOOL DEFAULT FALSE,
     PRIMARY KEY (club_id, user_id),
     FOREIGN KEY (club_id) REFERENCES TennisClub(club_id) on delete cascade,
     FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) on delete cascade
@@ -100,18 +104,16 @@ create table if not exists Users_Reservations(
 );
 
 drop table if exists Request;
-
--- Create the Request table
-CREATE TABLE Request (
+CREATE TABLE if not exists Request(
     req_id INT AUTO_INCREMENT PRIMARY KEY,
     status ENUM('PENDING', 'APPROVED', 'REJECTED'),
     type ENUM('SIMPLE','KID'),
     to_become ENUM('MEMBER','ATHLETE'),
-    req_club_id INT,
-    req_user_id INT,
-    req_child_id INT,
-    request_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (req_user_id) REFERENCES SimpleUsers(user_id),
-    FOREIGN KEY (req_club_id) REFERENCES TennisClub(club_id)
+    club_id INT,
+    user_id INT,
+    child_id INT,
+    request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id),
+    FOREIGN KEY (club_id) REFERENCES TennisClub(club_id)
 );
 
