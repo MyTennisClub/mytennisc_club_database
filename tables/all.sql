@@ -100,8 +100,8 @@ create table if not exists Users_Reservations(
     user_id int,
     res_id bigint,
     PRIMARY KEY (user_id, res_id),
-    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id),
-    FOREIGN KEY (res_id) REFERENCES CourtReservations(res_id)
+    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (res_id) REFERENCES CourtReservations(res_id) ON DELETE CASCADE
 );
 
 drop table if exists Request;
@@ -114,7 +114,8 @@ CREATE TABLE if not exists Request(
     user_id INT,
     child_id INT,
     request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id),
-    FOREIGN KEY (club_id) REFERENCES TennisClub(club_id)
+    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) on delete cascade,
+    FOREIGN KEY (club_id) REFERENCES TennisClub(club_id) on delete cascade
 );
 
+truncate table courts;
