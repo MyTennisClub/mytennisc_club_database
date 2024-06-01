@@ -133,7 +133,6 @@ INSERT INTO SimpleUsers (
     user_email,
     user_phone,
     user_address,
-    user_type,
     referred_by,
     user_has_children
 ) VALUES (
@@ -143,7 +142,6 @@ INSERT INTO SimpleUsers (
     p_email,
     p_phone,
     p_address,
-    'GUEST',
     p_guardian_id,
     FALSE
 );

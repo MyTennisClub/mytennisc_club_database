@@ -11,7 +11,6 @@ CREATE TABLE if not exists SimpleUsers (
     user_email VARCHAR(100) not null,
     user_phone VARCHAR(50) not null,
     user_address VARCHAR(255) not null,
-    user_type ENUM('GUEST','ATHLETE','MEMBER') not null,
     user_identification_file BLOB,
     user_doctors_file BLOB,
     user_solemn_declaration_file BLOB,
@@ -49,6 +48,7 @@ drop table if exists Clubs_Users;
 create table if not exists Clubs_Users(
     club_id int,
     user_id int,
+    user_type ENUM('GUEST','ATHLETE','MEMBER') not null,
     PRIMARY KEY (club_id, user_id),
     FOREIGN KEY (club_id) REFERENCES TennisClub(club_id) on delete cascade,
     FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) on delete cascade

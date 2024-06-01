@@ -12,7 +12,6 @@ BEGIN
         user_email,
         user_phone,
         user_address,
-        user_type,
         user_has_children,
         referred_by
     FROM
