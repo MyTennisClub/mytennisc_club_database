@@ -21,4 +21,4 @@ END$$
 
 DELIMITER ;
 
-call fetch_athletes_from_club(1);
+# call fetch_athletes_from_club(1);
