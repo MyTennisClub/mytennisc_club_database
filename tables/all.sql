@@ -49,6 +49,7 @@ create table if not exists Clubs_Users(
     club_id int,
     user_id int,
     user_type ENUM('GUEST','ATHLETE','MEMBER') not null,
+    review_date  DATE,
     review_stars INT,
     review_description TEXT,
     review_likes INT DEFAULT 0,
