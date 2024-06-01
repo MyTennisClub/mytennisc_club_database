@@ -49,6 +49,8 @@ create table if not exists Clubs_Users(
     club_id int,
     user_id int,
     user_type ENUM('GUEST','ATHLETE','MEMBER') not null,
+    user_employment_status BOOL,
+    user_employee_type ENUM('SECRETARY','COACH'),
     review_date  DATE,
     review_stars INT,
     review_description TEXT,
@@ -89,6 +91,7 @@ CREATE TABLE IF NOT EXISTS CourtReservations(
     res_court_id INT,
     res_equipment BOOLEAN,
     res_club_id INT,
+    res_verification_id INT,
     constraint res_club FOREIGN KEY (res_club_id) REFERENCES TennisClub(club_id) ON DELETE CASCADE on update cascade,
     constraint res_court FOREIGN KEY (res_court_id) REFERENCES Courts(court_id) ON DELETE CASCADE on update cascade
 );
