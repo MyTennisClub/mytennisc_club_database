@@ -13,8 +13,10 @@ CREATE TABLE if not exists SimpleUsers (
     user_has_children BOOLEAN not null default false,
     user_acc_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     referred_by INT,
-    FOREIGN KEY (referred_by) REFERENCES SimpleUsers(user_id)
+    FOREIGN KEY (referred_by) REFERENCES SimpleUsers(user_id) on delete set null
 );
+
+
 
 drop table if exists TennisClub;
 CREATE TABLE if not exists TennisClub (
@@ -45,10 +47,6 @@ create table if not exists Clubs_Users(
     club_id int,
     user_id int,
     user_type ENUM('GUEST','ATHLETE','MEMBER') not null,
-    review_stars INT,
-    review_description TEXT,
-    review_likes INT DEFAULT 0,
-    review_check BOOL DEFAULT FALSE,
     PRIMARY KEY (club_id, user_id),
     FOREIGN KEY (club_id) REFERENCES TennisClub(club_id) on delete cascade,
     FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) on delete cascade
@@ -68,11 +66,9 @@ CREATE TABLE IF NOT EXISTS Courts(
     court_public_equipment BOOLEAN NOT NULL,
     court_price DECIMAL(10, 2) NOT NULL,
     court_club_id INT,
-    FOREIGN KEY (court_club_id) REFERENCES TennisClub(club_id) ON DELETE CASCADE
+    constraint court_club FOREIGN KEY (court_club_id) REFERENCES TennisClub(club_id) on delete cascade on update cascade
 );
 
-
--- Drop and create the CourtReservations table
 DROP TABLE IF EXISTS CourtReservations;
 CREATE TABLE IF NOT EXISTS CourtReservations(
     res_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -84,8 +80,8 @@ CREATE TABLE IF NOT EXISTS CourtReservations(
     res_court_id INT,
     res_equipment BOOLEAN,
     res_club_id INT,
-    FOREIGN KEY (res_club_id) REFERENCES TennisClub(club_id) ON DELETE CASCADE,
-    FOREIGN KEY (res_court_id) REFERENCES Courts(court_id) ON DELETE CASCADE
+    constraint res_club FOREIGN KEY (res_club_id) REFERENCES TennisClub(club_id) ON DELETE CASCADE on update cascade,
+    constraint res_court FOREIGN KEY (res_court_id) REFERENCES Courts(court_id) ON DELETE CASCADE on update cascade
 );
 
 ALTER TABLE CourtReservations AUTO_INCREMENT=1000000;
@@ -95,8 +91,8 @@ create table if not exists Users_Reservations(
     user_id int,
     res_id bigint,
     PRIMARY KEY (user_id, res_id),
-    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id),
-    FOREIGN KEY (res_id) REFERENCES CourtReservations(res_id)
+    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) on delete cascade on update cascade,
+    FOREIGN KEY (res_id) REFERENCES CourtReservations(res_id) on delete cascade on update cascade
 );
 
 drop table if exists Request;
@@ -109,8 +105,8 @@ CREATE TABLE if not exists Request(
     user_id INT,
     child_id INT,
     request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id),
-    FOREIGN KEY (club_id) REFERENCES TennisClub(club_id)
+    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) on delete cascade on update cascade,
+    FOREIGN KEY (club_id) REFERENCES TennisClub(club_id) on delete cascade on update cascade
 );
 
 INSERT INTO TennisClub (
@@ -208,15 +204,32 @@ VALUES
 (2, 2,'ATHLETE');
 ;
 
-INSERT INTO Courts (court_title, field_type, court_status, court_covered, court_athlete_capacity, court_only_for_members, court_equipment, court_equipment_price, court_public_equipment, court_price, court_club_id)
-VALUES
-('Court 1', 'CLAY', 'AVAILABLE', TRUE, 10, FALSE, TRUE, 5.00, TRUE, 20.00, 1),
-('Court 2', 'GRASS', 'AVAILABLE', FALSE, 10, TRUE, FALSE, 0.00, FALSE, 15.00, 1);
+
 
 INSERT INTO Request (status, type, to_become, club_id, user_id, child_id)
 VALUES
 ('PENDING', 'SIMPLE', 'MEMBER', 1, 1, NULL),
 ('APPROVED', 'KID', 'ATHLETE', 2, 2, 1);
+
+INSERT INTO SimpleUsers (
+    user_first_name,
+    user_last_name,
+    user_birth_date,
+    user_email,
+    user_phone,
+    user_address,
+    user_has_children,
+    referred_by
+) VALUES (
+    'ChildFirstName',
+    'ChildLastName',
+    '2010-01-01',
+    'child.email@example.com',
+    '1234567890',
+    '123 Main St',
+    false,
+    1
+);
 
 drop procedure if exists getClubs;
 DELIMITER $$
