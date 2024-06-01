@@ -181,61 +181,49 @@ INSERT INTO CourtReservations (
 
 
 
--- Inserting data into SimpleUsers
 INSERT INTO SimpleUsers (user_first_name, user_last_name, user_birth_date, user_email, user_phone, user_address, user_has_children)
 VALUES
 ('John', 'Doe', '1980-01-01', 'john.doe@example.com', '1234567890', '123 Main St', false),
 ('Jane', 'Doe', '1980-02-02', 'jane.doe@example.com', '0987654321', '456 Main St', true);
--- Add more records as needed...
 
--- Inserting data into TennisClub
 INSERT INTO TennisClub (club_name, club_description, club_address, club_email, club_website, club_latitude, club_longitude, club_start_time, club_end_time, club_start_for_public, club_end_for_public, club_max_people_court)
 VALUES
 ('Club 1', 'Description 1', 'Address 1', 'email1@example.com', 'http://www.example1.com', 40.712776, -74.005974, '08:00:00', '23:00:00', '08:00:00', '22:00:00', 4),
 ('Club 2', 'Description 2', 'Address 2', 'email2@example.com', 'http://www.example2.com', 40.712776, -74.005974, '08:00:00', '23:00:00', '08:00:00', '22:00:00', 4);
--- Add more records as needed...
 
--- Inserting data into ClubsPhone
 INSERT INTO ClubsPhone (club_phone, club_id)
 VALUES
 ('1234567890', 1),
 ('0987654321', 2);
--- Add more records as needed...
-
--- Inserting data into Clubs_Users
-INSERT INTO Clubs_Users (club_id, user_id, user_type)
-VALUES
-(1, 1, 'MEMBER'),
-(1, 2, 'ATHLETE');
--- Add more records as needed...
 
 INSERT INTO Clubs_Users (club_id, user_id, user_type)
 VALUES
-(2, 1, 'ATHLETE');
--- Inserting data into Courts
+(1, 1,'GUEST'),
+(1, 2,'ATHLETE'),
+(2, 1,'GUEST'),
+(2, 2,'ATHLETE');
+;
+
 INSERT INTO Courts (court_title, field_type, court_status, court_covered, court_athlete_capacity, court_only_for_members, court_equipment, court_equipment_price, court_public_equipment, court_price, court_club_id)
 VALUES
 ('Court 1', 'CLAY', 'AVAILABLE', TRUE, 10, FALSE, TRUE, 5.00, TRUE, 20.00, 1),
 ('Court 2', 'GRASS', 'AVAILABLE', FALSE, 10, TRUE, FALSE, 0.00, FALSE, 15.00, 1);
--- Add more records as needed...
 
--- Inserting data into CourtReservations
-# INSERT INTO CourtReservations (res_type, res_status, res_start_date, res_end_date, res_no_people, res_court_id, res_equipment, res_club_id)
-# VALUES
-# ('RESERVATION', 'PENDING', '2024-06-01 08:00:00', '2024-06-01 09:00:00', 8, 1, TRUE, 1),
-# ('RESERVATION', 'COMPLETED', '2024-06-01 09:00:00', '2024-06-01 10:00:00', 6, 1, FALSE, 1),
-# -- Add more records as needed...
-
-
--- Inserting data into Request
 INSERT INTO Request (status, type, to_become, club_id, user_id, child_id)
 VALUES
 ('PENDING', 'SIMPLE', 'MEMBER', 1, 1, NULL),
 ('APPROVED', 'KID', 'ATHLETE', 2, 2, 1);
--- Add more records as needed...
 
-SELECT * FROM SimpleUsers;
-
+drop procedure if exists getClubs;
+DELIMITER $$
+create procedure getClubs()
+begin
+    SELECT TennisClub.club_id,club_name,club_address,club_latitude,club_longitude,field_type,court_covered,court_equipment
+    FROM TennisClub RIGHT JOIN Courts ON TennisClub.club_id = Courts.court_club_id
+    WHERE court_only_for_members=0
+    and Courts.court_status='AVAILABLE';
+end $$
+DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS getAvailableCourtsCoach;
@@ -332,3 +320,10 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+# CALL getAvailableCourtsCoach(1, '2024-06-01', '03:00:00', 12345, 4);
+
+
+
+
+
