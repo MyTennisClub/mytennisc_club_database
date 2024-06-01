@@ -107,11 +107,11 @@ CREATE TABLE Request (
     status ENUM('PENDING', 'APPROVED', 'REJECTED'),
     type ENUM('SIMPLE','KID'),
     to_become ENUM('MEMBER','ATHLETE'),
-    club_id INT,
-    user_id INT,
-    child_id INT,
+    req_club_id INT,
+    req_user_id INT,
+    req_child_id INT,
     request_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id),
-    FOREIGN KEY (club_id) REFERENCES TennisClub(club_id)
+    FOREIGN KEY (req_user_id) REFERENCES SimpleUsers(user_id),
+    FOREIGN KEY (req_club_id) REFERENCES TennisClub(club_id)
 );
 

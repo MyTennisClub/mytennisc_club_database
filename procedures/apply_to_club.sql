@@ -1,3 +1,46 @@
+DROP PROCEDURE IF EXISTS simple_apply_to_club;
+
+DELIMITER $$
+
+CREATE PROCEDURE simple_apply_to_club(
+    IN p_identification BLOB,
+    IN p_doctors_note BLOB,
+    IN p_to_become VARCHAR(100),
+    IN p_tennis_club_id INT,
+    IN p_guest_id INT
+)
+
+BEGIN
+
+IF p_to_become = 'MEMBER' THEN
+
+    INSERT INTO Request (
+        status,
+        type,
+        to_become,
+        club_id,
+        user_id
+    ) VALUES (
+        'PENDING',
+        'SIMPLE',  -- Assuming type SIMPLE for existing users making the request
+        p_to_become,
+        p_tennis_club_id,
+        p_guest_id
+    );
+
+    UPDATE SimpleUsers
+    SET
+
+END IF;
+
+
+
+END$$
+
+DELIMITER ;
+
+
+
 DROP PROCEDURE IF EXISTS you_athlete_apply;
 
 DELIMITER $$

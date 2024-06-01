@@ -1,51 +1,53 @@
--- Insert sample data into Person table
-INSERT INTO Person (first_name, last_name, email, phone, address, start_date)
+-- Insert Data into SimpleUsers
+INSERT INTO SimpleUsers (user_first_name, user_last_name, user_birth_date, user_email, user_phone, user_address, user_type, user_identification_file, user_doctors_file, user_solemn_declaration_file, user_has_children, referred_by)
 VALUES
-('John', 'Doe', 'john.doe@example.com', '123-456-7890', '123 Main St', '2023-01-01 09:00:00'),
-('Jane', 'Smith', 'jane.smith@example.com', '123-456-7891', '456 Elm St', '2023-01-02 10:00:00'),
-('Emily', 'Johnson', 'emily.johnson@example.com', '123-456-7892', '789 Oak St', '2023-01-03 11:00:00');
+('John', 'Doe', '1990-01-01', 'john.doe@example.com', '123-456-7890', '123 Main St', 'MEMBER', NULL, NULL, NULL, FALSE, NULL),
+('Jane', 'Smith', '1985-05-15', 'jane.smith@example.com', '234-567-8901', '456 Elm St', 'ATHLETE', NULL, NULL, NULL, TRUE, 1),
+('Mike', 'Johnson', '1992-07-20', 'mike.johnson@example.com', '345-678-9012', '789 Oak St', 'GUEST', NULL, NULL, NULL, FALSE, 2);
 
--- Insert sample data into Guest table
-INSERT INTO Guest (person_id, visit_date, membership_status)
+-- Insert Data into TennisClub
+INSERT INTO TennisClub (club_name, club_description, club_address, club_email, club_website, club_latitude, club_longitude, club_start_time, club_end_time, club_start_for_public, club_end_for_public, club_max_people_court)
 VALUES
-(1, '2023-02-01 09:00:00', 'MEMBER'),
-(2, '2023-02-02 10:00:00', 'GUEST'),
-(3, '2023-02-03 11:00:00', 'MEMBER');
+('Athens Tennis Club', 'A premier tennis club in Athens', '1 Kifisias Ave, Athens, Greece', 'info@athenstennisclub.gr', 'www.athenstennisclub.gr', 37.983810, 23.727539, '06:00:00', '22:00:00', '08:00:00', '20:00:00', 4),
+('Thessaloniki Tennis Club', 'Open late for night tennis sessions', '2 Nikis Ave, Thessaloniki, Greece', 'contact@thessalonikitennisclub.gr', 'www.thessalonikitennisclub.gr', 40.640063, 22.944419, '06:00:00', '23:00:00', '09:00:00', '21:00:00', 5);
 
--- Insert sample data into TennisClub table
-INSERT INTO TennisClub (name, description, address, email, website, latitude, longitude, start_for_public, end_for_public)
+-- Insert Data into ClubsPhone
+INSERT INTO ClubsPhone (club_phone, club_id)
 VALUES
-('City Tennis Club', 'A premier tennis club in the city', '789 Park Ave', 'contact@citytennisclub.com', 'www.citytennisclub.com', 40.712800, -74.006000, '2023-03-01 09:00:00', '2023-12-31 18:00:00'),
-('Suburban Tennis Club', 'A friendly suburban tennis club', '123 Country Rd', 'info@suburbantennisclub.com', 'www.suburbantennisclub.com', 40.123400, -74.567800, '2023-03-01 09:00:00', '2023-12-31 18:00:00'),
-('Beachside Tennis Club', 'Enjoy tennis by the beach', '789 Ocean Dr', 'info@beachsidetennisclub.com', 'www.beachsidetennisclub.com', 36.778300, -119.417900, '2023-03-01 09:00:00', '2023-12-31 18:00:00');
+('+30-210-123-4567', 1),
+('+30-231-123-4567', 2);
 
--- Insert sample data into courts table
-INSERT INTO courts (title, field_type, status, covered, athlete_capacity, only_for_members, equipment, equipment_price, public_equipment, court_price, club_id)
+-- Insert Data into Clubs_Users
+INSERT INTO Clubs_Users (club_id, user_id)
 VALUES
-('Court 1', 'CLAY', 'AVAILABLE', TRUE, 4, TRUE, TRUE, 15.00, FALSE, 50.00, 1),
-('Court 2', 'GRASS', 'MAINTENANCE', FALSE, 4, FALSE, FALSE, 0.00, TRUE, 45.00, 1),
-('Court 3', 'HARD', 'AVAILABLE', FALSE, 6, TRUE, TRUE, 10.00, TRUE, 55.00, 2),
-('Court 4', 'CARPET', 'AVAILABLE', TRUE, 5, FALSE, TRUE, 12.00, FALSE, 60.00, 3);
+(1, 1),
+(1, 2),
+(2, 3);
 
--- Insert sample data into ClubsPhone table
-INSERT INTO ClubsPhone (phone, club_id)
+-- Insert Data into Courts
+INSERT INTO Courts (court_title, field_type, court_status, court_covered, court_athlete_capacity, court_only_for_members, court_equipment, court_equipment_price, court_public_equipment, court_price, court_club_id)
 VALUES
-('123-456-7893', 1),
-('123-456-7894', 2),
-('123-456-7895', 3);
+('Court 1', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 10.00, TRUE, 20.00, 1),
+('Court 2', 'GRASS', 'MAINTENANCE', FALSE, 6, TRUE, FALSE, 0.00, FALSE, 15.00, 1),
+('Court 3', 'HARD', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 8.00, TRUE, 18.00, 2);
 
--- Insert sample data into court_reservations table
-INSERT INTO court_reservations (type, status, start_date, end_date, no_people, court_id, equipment, guest_id, club_id)
+-- Insert Data into CourtReservations
+INSERT INTO CourtReservations (res_type, res_status, res_start_date, res_end_date, res_no_people, res_court_id, res_equipment, res_club_id)
 VALUES
-('RESERVATION', 'PENDING', '2023-04-01 09:00:00', '2023-04-01 10:00:00', 2, 1, TRUE, 1, 1),
-('SESSION', 'COMPLETED', '2023-04-02 11:00:00', '2023-04-02 12:00:00', 4, 2, FALSE, 2, 1),
-('RESERVATION', 'CANCELLED', '2023-04-03 13:00:00', '2023-04-03 14:00:00', 3, 3, TRUE, 3, 2),
-('RESERVATION', 'PENDING', '2023-04-04 15:00:00', '2023-04-04 16:00:00', 2, 4, FALSE, 1, 3);
+('RESERVATION', 'PENDING', '2024-06-01 10:00:00', '2024-06-01 12:00:00', 4, 1, TRUE, 1),
+('SESSION', 'COMPLETED', '2024-05-20 14:00:00', '2024-05-20 16:00:00', 6, 2, FALSE, 1),
+('RESERVATION', 'CANCELLED', '2024-07-01 09:00:00', '2024-07-01 11:00:00', 3, 3, TRUE, 2);
 
--- Insert sample data into Request table
-INSERT INTO Request (status, type, to_become, club_id, guest_id, identification, doctors_note, solemn_dec, full_name, first_name, last_name, phone, address, birth_date, email)
+-- Insert Data into Users_Reservations
+INSERT INTO Users_Reservations (user_id, res_id)
 VALUES
-('PENDING', 'SIMPLE', 'MEMBER', 1, 1, NULL, NULL, NULL, 'John Doe', 'John', 'Doe', '123-456-7890', '123 Main St', '1980-01-01', 'john.doe@example.com'),
-('APPROVED', 'KID', 'ATHLETE', 2, 2, NULL, NULL, NULL, 'Jane Smith', 'Jane', 'Smith', '123-456-7891', '456 Elm St', '2005-02-02', 'jane.smith@example.com'),
-('REJECTED', 'SIMPLE', 'MEMBER', 3, 3, NULL, NULL, NULL, 'Emily Johnson', 'Emily', 'Johnson', '123-456-7892', '789 Oak St', '1995-03-03', 'emily.johnson@example.com');
+(1, 1000000),
+(2, 1000001),
+(3, 1000002);
 
+-- Insert Data into Request
+INSERT INTO Request (status, type, to_become, req_club_id, req_user_id, req_child_id)
+VALUES
+('PENDING', 'SIMPLE', 'MEMBER', 1, 1, NULL),
+('APPROVED', 'SIMPLE', 'ATHLETE', 1, 2, NULL),
+('REJECTED', 'KID', 'ATHLETE', 2, 3, NULL);
