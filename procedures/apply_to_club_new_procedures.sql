@@ -1,4 +1,4 @@
-call simple_apply_to_club(NULL,NULL,'ATHLETE',1,3);
+# call simple_apply_to_club(NULL,NULL,'ATHLETE',1,3);
 
 DROP PROCEDURE IF EXISTS simple_apply_to_club;
 
@@ -47,59 +47,59 @@ DELIMITER ;
 
 -- ------------------------------------------------------
 
-DROP PROCEDURE IF EXISTS create_kid_user;
-
-DELIMITER $$
-
-CREATE PROCEDURE create_kid_user(
-    IN p_father_id INT,
-    IN p_kid_first_name VARCHAR(255),
-    IN p_kid_last_name VARCHAR(255),
-    IN p_kid_birth_date DATE,
-    IN p_kid_email VARCHAR(100),
-    IN p_kid_phone VARCHAR(50),
-    IN p_kid_address VARCHAR(255),
-    OUT p_kid_user_id INT
-)
-BEGIN
-    DECLARE p_kid_user_id INT;
-
-    INSERT INTO SimpleUsers (
-        user_first_name,
-        user_last_name,
-        user_birth_date,
-        user_email,
-        user_phone,
-        user_address,
-        user_type,
-        referred_by,
-        user_has_children
-    ) VALUES (
-        p_kid_first_name,
-        p_kid_last_name,
-        p_kid_birth_date,
-        p_kid_email,
-        p_kid_phone,
-        p_kid_address,
-        'GUEST',
-        p_father_id,
-        FALSE
-    );
-
-    UPDATE simpleusers
-    SET user_has_children = true
-    WHERE user_id = p_father_id;
-
-    SET p_kid_user_id = LAST_INSERT_ID();
-
-    -- Return the new kid's user ID
-    SELECT p_kid_user_id;
-END$$
-
-DELIMITER ;
+# DROP PROCEDURE IF EXISTS create_kid_user;
+#
+# DELIMITER $$
+#
+# CREATE PROCEDURE create_kid_user(
+#     IN p_father_id INT,
+#     IN p_kid_first_name VARCHAR(255),
+#     IN p_kid_last_name VARCHAR(255),
+#     IN p_kid_birth_date DATE,
+#     IN p_kid_email VARCHAR(100),
+#     IN p_kid_phone VARCHAR(50),
+#     IN p_kid_address VARCHAR(255),
+#     OUT p_kid_user_id INT
+# )
+# BEGIN
+#     DECLARE p_kid_user_id INT;
+#
+#     INSERT INTO SimpleUsers (
+#         user_first_name,
+#         user_last_name,
+#         user_birth_date,
+#         user_email,
+#         user_phone,
+#         user_address,
+#         user_type,
+#         referred_by,
+#         user_has_children
+#     ) VALUES (
+#         p_kid_first_name,
+#         p_kid_last_name,
+#         p_kid_birth_date,
+#         p_kid_email,
+#         p_kid_phone,
+#         p_kid_address,
+#         'GUEST',
+#         p_father_id,
+#         FALSE
+#     );
+#
+#     UPDATE simpleusers
+#     SET user_has_children = true
+#     WHERE user_id = p_father_id;
+#
+#     SET p_kid_user_id = LAST_INSERT_ID();
+#
+#     -- Return the new kid's user ID
+#     SELECT p_kid_user_id;
+# END$$
+#
+# DELIMITER ;
 
 -- ------------------------------------------------------
-call kid_apply_to_club(null,null,null,'ATHLETE',1,3,'BOB','MIHALOPOULOS','2010-04-15','baknis@gmail.com','1234','adsd');
+# call kid_apply_to_club(null,null,null,'ATHLETE',1,3,'BOB','MIHALOPOULOS','2010-04-15','baknis@gmail.com','1234','adsd');
 
 DROP PROCEDURE IF EXISTS kid_apply_to_club;
 
@@ -123,11 +123,38 @@ CREATE PROCEDURE kid_apply_to_club(
 BEGIN
 
 DECLARE p_kid_user_id INT;
-call create_kid_user(p_guardian_id,p_first_name,p_last_name,p_birth_date,p_email,p_phone, p_address,@kid_user_id);
+# call create_kid_user(p_guardian_id,p_first_name,p_last_name,p_birth_date,p_email,p_phone, p_address,@kid_user_id);
 
--- Retrieve the result from the OUT parameter
-SET p_kid_user_id = @kid_user_id;
-select p_kid_user_id;
+-- Create a new kid user
+INSERT INTO SimpleUsers (
+    user_first_name,
+    user_last_name,
+    user_birth_date,
+    user_email,
+    user_phone,
+    user_address,
+    user_type,
+    referred_by,
+    user_has_children
+) VALUES (
+    p_first_name,
+    p_last_name,
+    p_birth_date,
+    p_email,
+    p_phone,
+    p_address,
+    'GUEST',
+    p_guardian_id,
+    FALSE
+);
+
+UPDATE simpleusers
+SET user_has_children = true
+WHERE user_id = p_guardian_id;
+
+SET p_kid_user_id = LAST_INSERT_ID();
+
+# Apply to club (kid)
 INSERT INTO Request (
     status,
     type,
@@ -164,7 +191,7 @@ DELIMITER ;
 
 -- ------------------------------------------------------
 
-call get_user_info(1);
+# call get_user_info(1);
 
 DROP PROCEDURE IF EXISTS get_user_info;
 
