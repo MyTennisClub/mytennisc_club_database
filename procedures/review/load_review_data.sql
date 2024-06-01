@@ -8,6 +8,7 @@ CREATE PROCEDURE load_review_data(
 BEGIN
     SELECT
         su.user_first_name,
+        su.user_id,
         cu.review_description,
         cu.review_likes,
         cu.review_check
@@ -21,4 +22,4 @@ END$$
 
 DELIMITER ;
 
-CALL load_review_data(1);
+# CALL load_review_data(1);
