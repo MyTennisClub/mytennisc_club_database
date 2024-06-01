@@ -17,7 +17,7 @@ CREATE TABLE if not exists SimpleUsers (
     user_has_children BOOLEAN not null default false,
     user_acc_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     referred_by INT,
-    FOREIGN KEY (referred_by) REFERENCES SimpleUsers(user_id)
+    FOREIGN KEY (referred_by) REFERENCES SimpleUsers(user_id) on delete set null
 );
 
 drop table if exists TennisClub;
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS Courts(
     court_public_equipment BOOLEAN NOT NULL,
     court_price DECIMAL(10, 2) NOT NULL,
     court_club_id INT,
-    FOREIGN KEY (court_club_id) REFERENCES TennisClub(club_id) ON DELETE CASCADE
+    constraint court_club FOREIGN KEY (court_club_id) REFERENCES TennisClub(club_id) on delete cascade on update cascade
 );
 
 
@@ -89,8 +89,8 @@ CREATE TABLE IF NOT EXISTS CourtReservations(
     res_court_id INT,
     res_equipment BOOLEAN,
     res_club_id INT,
-    FOREIGN KEY (res_club_id) REFERENCES TennisClub(club_id) ON DELETE CASCADE,
-    FOREIGN KEY (res_court_id) REFERENCES Courts(court_id) ON DELETE CASCADE
+    constraint res_club FOREIGN KEY (res_club_id) REFERENCES TennisClub(club_id) ON DELETE CASCADE on update cascade,
+    constraint res_court FOREIGN KEY (res_court_id) REFERENCES Courts(court_id) ON DELETE CASCADE on update cascade
 );
 
 ALTER TABLE CourtReservations AUTO_INCREMENT=1000000;
@@ -100,8 +100,8 @@ create table if not exists Users_Reservations(
     user_id int,
     res_id bigint,
     PRIMARY KEY (user_id, res_id),
-    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (res_id) REFERENCES CourtReservations(res_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) on delete cascade on update cascade,
+    FOREIGN KEY (res_id) REFERENCES CourtReservations(res_id) on delete cascade on update cascade
 );
 
 drop table if exists Request;
@@ -114,8 +114,7 @@ CREATE TABLE if not exists Request(
     user_id INT,
     child_id INT,
     request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) on delete cascade,
-    FOREIGN KEY (club_id) REFERENCES TennisClub(club_id) on delete cascade
+    FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) on delete cascade on update cascade,
+    FOREIGN KEY (club_id) REFERENCES TennisClub(club_id) on delete cascade on update cascade
 );
 
-truncate table courts;

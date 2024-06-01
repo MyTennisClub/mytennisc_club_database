@@ -13,4 +13,4 @@ END$$
 
 DELIMITER ;
 
-call cancel_reservation(1000000);
+# call cancel_reservation(1000000);
