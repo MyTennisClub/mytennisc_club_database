@@ -641,6 +641,7 @@ BEGIN
         UPDATE Clubs_Users
         SET review_stars = p_review_stars,
             review_description = p_review_text,
+            review_date = NOW(),
             review_check = TRUE -- Mark the review_check as true after updating
         WHERE user_id = p_user_id AND club_id = p_tennis_club_id;
     END IF;
