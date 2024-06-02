@@ -12,3 +12,5 @@ CREATE TABLE IF NOT EXISTS CourtReservations(
     constraint res_club FOREIGN KEY (res_club_id) REFERENCES TennisClub(club_id) ON DELETE CASCADE on update cascade,
     constraint res_court FOREIGN KEY (res_court_id) REFERENCES Courts(court_id) ON DELETE CASCADE on update cascade
 );
+
+ALTER TABLE CourtReservations AUTO_INCREMENT=1000000;
