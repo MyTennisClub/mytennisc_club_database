@@ -725,3 +725,22 @@ BEGIN
     DEALLOCATE PREPARE stmt;
 END $$
 DELIMITER ;
+
+
+drop procedure if exists GetMaxPeopleCourtByClub;
+DELIMITER $$
+create procedure GetMaxPeopleCourtByClub(IN p_club_id int)
+BEGIN
+    -- Declare a local variable to store the max people court value
+    DECLARE v_max_people_court INT;
+
+    -- Select the club_max_people_court into the local variable
+    SELECT club_max_people_court
+    INTO v_max_people_court
+    FROM TennisClub
+    WHERE club_id = p_club_id;
+
+    -- Return the result
+    SELECT v_max_people_court AS max_people_court;
+END $$
+DELIMITER ;
