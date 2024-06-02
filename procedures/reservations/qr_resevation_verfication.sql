@@ -9,7 +9,7 @@ CREATE PROCEDURE verify_reservation(
 BEGIN
     UPDATE CourtReservations
     SET res_status = 'COMPLETED',
-    res_verification_id = p_secretary_id
+    res_secreatary_scaned = p_secretary_id
     WHERE res_id = p_reservation_id;
 END$$
 

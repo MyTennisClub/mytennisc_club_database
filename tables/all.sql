@@ -49,8 +49,6 @@ create table if not exists Clubs_Users(
     club_id int,
     user_id int,
     user_type ENUM('GUEST','ATHLETE','MEMBER') not null,
-    user_employment_status BOOL,
-    user_employee_type ENUM('SECRETARY','COACH'),
     review_date  DATE,
     review_stars INT,
     review_description TEXT,
@@ -59,6 +57,18 @@ create table if not exists Clubs_Users(
     PRIMARY KEY (club_id, user_id),
     FOREIGN KEY (club_id) REFERENCES TennisClub(club_id) on delete cascade,
     FOREIGN KEY (user_id) REFERENCES SimpleUsers(user_id) on delete cascade
+);
+
+drop table if exists Employees_Clubs;
+create table if not exists Employees_Clubs(
+    employee_id int,
+    club_id int,
+    employee_type ENUM('MANAGER','COACH','RECEPTIONIST', 'ACCOUNTANT', 'ADMIN', 'SECRETARY') not null,
+    cv_file BLOB,
+    years_of_experience INT,
+    PRIMARY KEY (employee_id, club_id),
+    FOREIGN KEY (employee_id) REFERENCES SimpleUsers(user_id) on delete cascade,
+    FOREIGN KEY (club_id) REFERENCES TennisClub(club_id) on delete cascade
 );
 
 DROP TABLE IF EXISTS Courts;
@@ -79,7 +89,6 @@ CREATE TABLE IF NOT EXISTS Courts(
 );
 
 
--- Drop and create the CourtReservations table
 DROP TABLE IF EXISTS CourtReservations;
 CREATE TABLE IF NOT EXISTS CourtReservations(
     res_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -91,10 +100,18 @@ CREATE TABLE IF NOT EXISTS CourtReservations(
     res_court_id INT,
     res_equipment BOOLEAN,
     res_club_id INT,
-    res_verification_id INT,
+    res_secreatary_scaned INT,
+    res_created_at DATETIME DEFAULT NOW(),
+    res_completed_at DATETIME,
+    res_cancelled_at DATETIME,
+    res_scanded_at DATETIME,
+    res_qr_code BLOB,
+    CONSTRAINT  res_secretary FOREIGN KEY (res_secreatary_scaned) REFERENCES Employees_Clubs(employee_id),
     constraint res_club FOREIGN KEY (res_club_id) REFERENCES TennisClub(club_id) ON DELETE CASCADE on update cascade,
     constraint res_court FOREIGN KEY (res_court_id) REFERENCES Courts(court_id) ON DELETE CASCADE on update cascade
 );
+ALTER TABLE CourtReservations AUTO_INCREMENT=1000000;
+
 
 ALTER TABLE CourtReservations AUTO_INCREMENT=1000000;
 

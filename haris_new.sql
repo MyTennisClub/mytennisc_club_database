@@ -365,8 +365,8 @@ INSERT INTO Request (
     status,
     type,
     to_become,
-    req_club_id,
-    req_user_id
+    club_id,
+    user_id
 ) VALUES (
     'PENDING',
     'SIMPLE',  -- Assuming type SIMPLE for existing users making the request
