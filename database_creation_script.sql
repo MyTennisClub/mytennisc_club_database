@@ -764,6 +764,97 @@ BEGIN
 END$$
 
 DELIMITER ;
+DROP PROCEDURE IF EXISTS CreatePrivateCoachSession;
+DELIMITER $$
+CREATE PROCEDURE CreatePrivateCoachSession (
+    IN p_club_id INT,
+    IN p_court_id INT,
+    IN p_res_start_date DATETIME,
+    IN p_res_end_date DATETIME,
+    IN p_res_no_people INT,
+    IN p_coach_id TEXT,
+    IN p_member_id TEXT
+)
+BEGIN
+    DECLARE users_list TEXT;
+    INSERT INTO CourtReservations (res_type, res_status, res_start_date, res_end_date, res_no_people, res_court_id, res_equipment, res_club_id)
+    VALUES ('RESERVATION', 'PENDING', p_res_start_date, p_res_end_date, p_res_no_people,p_court_id, TRUE, p_club_id);
+
+    if P_member_id is not null then
+        set users_list =  CONCAT(p_coach_id, ',', p_member_id);
+    else
+        set users_list = p_coach_id;
+    end if;
+
+    SET @last_res_id = LAST_INSERT_ID();
+
+    insert into Users_Reservations(user_id, res_id, absence)
+    select user_id, @last_res_id, FALSE from SimpleUsers where find_in_set(user_id, users_list);
+
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS BookCourt;
+DELIMITER $$
+CREATE PROCEDURE BookCourt (
+    IN p_club_id INT,
+    IN p_court_id INT,
+    IN p_res_start_date DATETIME,
+    IN p_res_end_date DATETIME,
+    IN p_res_no_people INT,
+    IN p_member_id INT,
+    IN p_with_equipment BOOLEAN,
+    IN p_qr_image BLOB
+)
+BEGIN
+    DECLARE users_list TEXT;
+    INSERT INTO CourtReservations (res_type, res_status, res_start_date, res_end_date, res_no_people, res_court_id, res_equipment, res_club_id, res_qr_code)
+    VALUES ('RESERVATION', 'PENDING', p_res_start_date, p_res_end_date, p_res_no_people,p_court_id, p_with_equipment, p_club_id,p_qr_image);
+
+    SET @last_res_id = LAST_INSERT_ID();
+
+    insert into Users_Reservations(user_id, res_id, absence)
+    values (p_member_id, @last_res_id, FALSE);
+
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS GetCoachPendingReservations;
+DELIMITER $$
+
+CREATE PROCEDURE GetCoachPendingReservations (
+    IN p_coach_id INT
+)
+BEGIN
+    SELECT
+        cr.res_id,
+        cr.res_type,
+        cr.res_court_id,
+        c.court_title AS court_name,
+        cr.res_start_date AS start_time,
+        cr.res_end_date AS end_time,
+        cr.res_qr_code,
+        tc.club_name AS club_name
+    FROM
+        CourtReservations cr
+    INNER JOIN
+        Users_Reservations ur ON cr.res_id = ur.res_id
+    INNER JOIN
+        Courts c ON cr.res_court_id = c.court_id
+    INNER JOIN
+        TennisClub tc ON cr.res_club_id = tc.club_id
+    WHERE
+        ur.user_id = p_coach_id
+        AND cr.res_type = 'RESERVATION'
+        AND cr.res_status = 'PENDING'
+    ORDER BY
+        cr.res_start_date ASC;
+END$$
+
+DELIMITER ;
+
+
+
 
 DROP PROCEDURE IF EXISTS GetCoachPendingReservationsAndSessions;
 DELIMITER $$
@@ -777,50 +868,43 @@ BEGIN
         cr.res_court_id,
         c.court_title AS court_name,
         cr.res_start_date AS start_time,
-        cr.res_end_date AS end_time
+        cr.res_end_date AS end_time,
+        tc.club_name AS club_name
     FROM
         CourtReservations cr
     INNER JOIN
         Users_Reservations ur ON cr.res_id = ur.res_id
     INNER JOIN
         Courts c ON cr.res_court_id = c.court_id
+    INNER JOIN
+        TennisClub tc ON cr.res_club_id = tc.club_id
     WHERE
         ur.user_id = p_coach_id
-        AND cr.res_status = 'PENDING'
     ORDER BY
         cr.res_start_date ASC;
 END$$
 DELIMITER ;
 
-
-
-DROP PROCEDURE IF EXISTS GetCoachPendingReservations;
+drop procedure if exists CheckUserClubMembership;
 DELIMITER $$
-CREATE PROCEDURE GetCoachPendingReservations (
-    IN p_coach_id INT
-)
-BEGIN
-    SELECT
-        cr.res_id,
-        cr.res_type,
-        cr.res_court_id,
-        c.court_title AS court_name,
-        cr.res_start_date AS start_time,
-        cr.res_end_date AS end_time
-    FROM
-        CourtReservations cr
-    INNER JOIN
-        Users_Reservations ur ON cr.res_id = ur.res_id
-    INNER JOIN
-        Courts c ON cr.res_court_id = c.court_id
-    WHERE
-        ur.user_id = p_coach_id
-        AND cr.res_type = 'RESERVATION'
-        AND cr.res_status = 'PENDING'
-    ORDER BY
-        cr.res_start_date ASC;
-END$$
+create procedure CheckUserClubMembership(
+    IN p_user_id INT,
+    IN p_club_id INT)
+begin
+    DECLARE p_is_member BOOLEAN DEFAULT NULL;
+
+    if exists(
+        select 1 from clubs_users where user_id = p_user_id and p_club_id = club_id and  user_type = 'GUEST'
+    ) then
+        set p_is_member = true;
+    else
+        set p_is_member = false;
+    end if;
+    select p_is_member;
+
+end$$
 DELIMITER ;
+
 
 
 DROP PROCEDURE IF EXISTS CreatePrivateCoachSession;
@@ -951,9 +1035,7 @@ DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS verify_reservation;
-
 DELIMITER $$
-
 CREATE PROCEDURE verify_reservation(
     IN p_secretary_id INT,
     IN p_reservation_id INT,
@@ -986,5 +1068,32 @@ BEGIN
     WHERE res_id = p_reservation_id;
 
 END$$
-
 DELIMITER ;
+
+
+#only for our database
+-- DELIMITER $$
+-- CREATE TRIGGER check_availability_before_insert
+-- BEFORE INSERT ON CourtReservations
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE overlap_count INT;
+
+--     SELECT COUNT(*)
+--     INTO overlap_count
+--     FROM CourtReservations
+--     WHERE res_court_id = NEW.res_court_id
+--     AND (
+--         (NEW.res_start_date BETWEEN res_start_date AND res_end_date)
+--         OR (NEW.res_end_date BETWEEN res_start_date AND res_end_date)
+--         OR (res_start_date BETWEEN NEW.res_start_date AND NEW.res_end_date)
+--         OR (res_end_date BETWEEN NEW.res_start_date AND NEW.res_end_date)
+--     )
+--     AND res_status != 'CANCELLED';
+
+--     IF overlap_count > 0 THEN
+--         SIGNAL SQLSTATE '45000'
+--         SET MESSAGE_TEXT = 'Cannot insert overlapping reservation.';
+--     END IF;
+-- END$$
+-- DELIMITER ;
