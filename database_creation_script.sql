@@ -681,3 +681,47 @@ BEGIN
 END$$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS getClubs;
+DELIMITER $$
+CREATE PROCEDURE getClubs(
+    IN entered_covered BOOLEAN,
+    IN entered_field_type VARCHAR(255),
+    IN has_equipment BOOLEAN
+)
+BEGIN
+    DECLARE sql_query TEXT;
+
+    SET sql_query = 'SELECT
+                        TennisClub.club_id,
+                        TennisClub.club_name,
+                        TennisClub.club_address,
+                        TennisClub.club_latitude,
+                        TennisClub.club_longitude,
+                        TennisClub.club_start_for_public,
+                        TennisClub.club_end_for_public
+                    FROM
+                        TennisClub
+                    LEFT JOIN
+                        Courts ON TennisClub.club_id = Courts.court_club_id
+                    WHERE Courts.court_status = ''AVAILABLE''';
+
+    IF entered_covered IS NOT NULL THEN
+        SET sql_query = CONCAT(sql_query, ' AND Courts.court_covered = ', IF(entered_covered, 'TRUE', 'FALSE'));
+    END IF;
+
+    IF entered_field_type IS NOT NULL THEN
+        SET sql_query = CONCAT(sql_query, ' AND Courts.field_type = ''', entered_field_type, '''');
+    END IF;
+
+    IF has_equipment IS NOT NULL THEN
+        SET sql_query = CONCAT(sql_query, ' AND Courts.court_equipment = ', IF(has_equipment, 'TRUE', 'FALSE'));
+    END IF;
+
+    SET sql_query = CONCAT(sql_query, ' GROUP BY TennisClub.club_id, TennisClub.club_name, TennisClub.club_address, TennisClub.club_latitude, TennisClub.club_longitude, TennisClub.club_start_for_public, TennisClub.club_end_for_public');
+
+    SET @sql_query = sql_query;
+    PREPARE stmt FROM @sql_query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END $$
+DELIMITER ;
