@@ -152,20 +152,21 @@ VALUES
 (10, 5, 'ADMIN', NULL, 9);
 
 -- Insert sample data into Request
-INSERT INTO Request (status, type, to_become, req_club_id, req_user_id, req_child_id, request_date)
+
+INSERT INTO Request (status, type, to_become, req_club_id, req_user_id, req_child_id)
 VALUES
-('PENDING', 'SIMPLE', 'MEMBER', 1, 1, NULL, '2023-06-01 08:00:00'),
-('APPROVED', 'KID', 'ATHLETE', 2, 2, 3, '2023-06-02 10:00:00'),
-('REJECTED', 'SIMPLE', 'MEMBER', 1, 3, NULL, '2023-06-03 12:00:00'),
-('PENDING', 'KID', 'ATHLETE', 2, 4, 5, '2023-06-04 14:00:00'),
-('PENDING', 'SIMPLE', 'MEMBER', 3, 1, NULL, '2023-06-05 08:00:00'),
-('APPROVED', 'KID', 'ATHLETE', 4, 2, 4, '2023-06-06 10:00:00'),
-('REJECTED', 'SIMPLE', 'MEMBER', 5, 3, NULL, '2023-06-07 12:00:00'),
-('PENDING', 'KID', 'ATHLETE', 3, 4, 5, '2023-06-08 14:00:00'),
-('PENDING', 'SIMPLE', 'MEMBER', 4, 6, NULL, '2023-06-09 08:00:00'),
-('APPROVED', 'KID', 'ATHLETE', 5, 7, 8, '2023-06-10 10:00:00'),
-('REJECTED', 'SIMPLE', 'MEMBER', 3, 9, NULL, '2023-06-11 12:00:00'),
-('PENDING', 'KID', 'ATHLETE', 2, 10, 11, '2023-06-12 14:00:00'),
-('PENDING', 'SIMPLE', 'MEMBER', 1, 12, NULL, '2023-06-13 08:00:00'),
-('APPROVED', 'KID', 'ATHLETE', 2, 13, 14, '2023-06-14 10:00:00'),
-('REJECTED', 'SIMPLE', 'MEMBER', 3, 15, NULL, '2023-06-15 12:00:00');
+('PENDING', 'SIMPLE', 'MEMBER', 1, 1, NULL),
+('APPROVED', 'KID', 'ATHLETE', 2, 2, 3),
+('REJECTED', 'SIMPLE', 'MEMBER', 1, 3, NULL),
+('PENDING', 'KID', 'ATHLETE', 2, 4, 5),
+('PENDING', 'SIMPLE', 'MEMBER', 3, 1, NULL),
+('APPROVED', 'KID', 'ATHLETE', 4, 2, 4),
+('REJECTED', 'SIMPLE', 'MEMBER', 5, 3, NULL),
+('PENDING', 'KID', 'ATHLETE', 3, 4, 5),
+('PENDING', 'SIMPLE', 'MEMBER', 4, 6, NULL),
+('APPROVED', 'KID', 'ATHLETE', 5, 7, 8),
+('REJECTED', 'SIMPLE', 'MEMBER', 3, 9, NULL),
+('PENDING', 'KID', 'ATHLETE', 2, 10, 11),
+('PENDING', 'SIMPLE', 'MEMBER', 1, 12, NULL),
+('APPROVED', 'KID', 'ATHLETE', 2, 13, 14),
+('REJECTED', 'SIMPLE', 'MEMBER', 3, 15, NULL);
