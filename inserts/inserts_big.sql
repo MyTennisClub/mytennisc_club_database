@@ -87,55 +87,114 @@ VALUES
 -- Insert sample data into Courts
 INSERT INTO Courts (court_title, field_type, court_status, court_covered, court_athlete_capacity, court_only_for_members, court_equipment, court_equipment_price, court_public_equipment, court_price, court_club_id)
 VALUES
-('Court 1', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 10.00, TRUE, 50.00, 1),
-('Court 2', 'GRASS', 'MAINTENANCE', FALSE, 2, TRUE, FALSE, 0.00, TRUE, 30.00, 1),
-('Court 3', 'HARD', 'AVAILABLE', FALSE, 6, FALSE, TRUE, 15.00, TRUE, 60.00, 2),
-('Court 4', 'CARPET', 'AVAILABLE', TRUE, 4, TRUE, TRUE, 12.00, FALSE, 45.00, 2),
-('Court 5', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 12.00, TRUE, 55.00, 3),
-('Court 6', 'GRASS', 'MAINTENANCE', FALSE, 3, TRUE, FALSE, 0.00, TRUE, 35.00, 3),
-('Court 7', 'HARD', 'AVAILABLE', FALSE, 6, FALSE, TRUE, 18.00, TRUE, 65.00, 4),
-('Court 8', 'CARPET', 'AVAILABLE', TRUE, 5, TRUE, TRUE, 14.00, FALSE, 50.00, 4),
-('Court 9', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 15.00, TRUE, 60.00, 5),
-('Court 10', 'GRASS', 'AVAILABLE', FALSE, 2, TRUE, FALSE, 0.00, TRUE, 40.00, 5);
+-- Courts for club_id 1
+('Court 1', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 5.00, TRUE, 25.00, 1),
+('Court 2', 'GRASS', 'MAINTENANCE', FALSE, 2, TRUE, FALSE, 0.00, TRUE, 15.00, 1),
+('Court 3', 'HARD', 'AVAILABLE', FALSE, 6, FALSE, TRUE, 7.50, TRUE, 30.00, 1),
+('Court 4', 'CARPET', 'AVAILABLE', TRUE, 4, TRUE, TRUE, 6.00, FALSE, 22.50, 1),
+('Court 5', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 6.00, TRUE, 27.50, 1),
+('Court 6', 'GRASS', 'MAINTENANCE', FALSE, 3, TRUE, FALSE, 0.00, TRUE, 17.50, 1),
+('Court 7', 'HARD', 'AVAILABLE', FALSE, 6, FALSE, TRUE, 9.00, TRUE, 32.50, 1),
+('Court 8', 'CARPET', 'AVAILABLE', TRUE, 5, TRUE, TRUE, 7.00, FALSE, 25.00, 1),
+('Court 9', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 7.50, TRUE, 30.00, 1),
+('Court 10', 'GRASS', 'AVAILABLE', FALSE, 2, TRUE, FALSE, 0.00, TRUE, 20.00, 1),
 
--- Insert sample data into CourtReservations
+-- Courts for club_id 2
+('Court 11', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 5.00, TRUE, 25.00, 2),
+('Court 12', 'GRASS', 'MAINTENANCE', FALSE, 2, TRUE, FALSE, 0.00, TRUE, 15.00, 2),
+('Court 13', 'HARD', 'AVAILABLE', FALSE, 6, FALSE, TRUE, 7.50, TRUE, 30.00, 2),
+('Court 14', 'CARPET', 'AVAILABLE', TRUE, 4, TRUE, TRUE, 6.00, FALSE, 22.50, 2),
+('Court 15', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 6.00, TRUE, 27.50, 2),
+('Court 16', 'GRASS', 'MAINTENANCE', FALSE, 3, TRUE, FALSE, 0.00, TRUE, 17.50, 2),
+('Court 17', 'HARD', 'AVAILABLE', FALSE, 6, FALSE, TRUE, 9.00, TRUE, 32.50, 2),
+('Court 18', 'CARPET', 'AVAILABLE', TRUE, 5, TRUE, TRUE, 7.00, FALSE, 25.00, 2),
+('Court 19', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 7.50, TRUE, 30.00, 2),
+('Court 20', 'GRASS', 'AVAILABLE', FALSE, 2, TRUE, FALSE, 0.00, TRUE, 20.00, 2),
+
+-- Courts for club_id 3
+('Court 21', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 5.00, TRUE, 25.00, 3),
+('Court 22', 'GRASS', 'MAINTENANCE', FALSE, 2, TRUE, FALSE, 0.00, TRUE, 15.00, 3),
+('Court 23', 'HARD', 'AVAILABLE', FALSE, 6, FALSE, TRUE, 7.50, TRUE, 30.00, 3),
+('Court 24', 'CARPET', 'AVAILABLE', TRUE, 4, TRUE, TRUE, 6.00, FALSE, 22.50, 3),
+('Court 25', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 6.00, TRUE, 27.50, 3),
+('Court 26', 'GRASS', 'MAINTENANCE', FALSE, 3, TRUE, FALSE, 0.00, TRUE, 17.50, 3),
+('Court 27', 'HARD', 'AVAILABLE', FALSE, 6, FALSE, TRUE, 9.00, TRUE, 32.50, 3),
+('Court 28', 'CARPET', 'AVAILABLE', TRUE, 5, TRUE, TRUE, 7.00, FALSE, 25.00, 3),
+('Court 29', 'CLAY', 'AVAILABLE', TRUE, 4, FALSE, TRUE, 7.50, TRUE, 30.00, 3),
+('Court 30', 'GRASS', 'AVAILABLE', FALSE, 2, TRUE, FALSE, 0.00, TRUE, 20.00, 3);
+
+
+-- Generate more reservations starting after 2024-06-02
+-- Generate more reservations starting after 2024-06-02
+-- Generate more reservations starting after 2024-06-02
 INSERT INTO CourtReservations (res_type, res_status, res_start_date, res_end_date, res_no_people, res_court_id, res_equipment, res_club_id, res_sec_scan, res_qr_code)
 VALUES
-('RESERVATION', 'PENDING', '2023-06-01 09:00:00', '2023-06-01 10:00:00', 2, 1, TRUE, 1, NULL, NULL),
-('SESSION', 'COMPLETED', '2023-06-01 11:00:00', '2023-06-01 12:30:00', 4, 3, FALSE, 2, NULL, NULL),
-('RESERVATION', 'CANCELLED', '2023-06-02 14:00:00', '2023-06-02 15:00:00', 6, 3, TRUE, 2, NULL, NULL),
-('SESSION', 'PENDING', '2023-06-03 08:00:00', '2023-06-03 09:30:00', 4, 4, FALSE, 2, NULL, NULL),
-('RESERVATION', 'PENDING', '2023-06-05 09:00:00', '2023-06-05 10:00:00', 3, 5, TRUE, 3, NULL, NULL),
-('SESSION', 'COMPLETED', '2023-06-05 11:00:00', '2023-06-05 12:30:00', 4, 7, FALSE, 4, NULL, NULL),
-('RESERVATION', 'CANCELLED', '2023-06-06 14:00:00', '2023-06-06 15:00:00', 5, 9, TRUE, 5, NULL, NULL),
-('SESSION', 'PENDING', '2023-06-07 08:00:00', '2023-06-07 09:30:00', 4, 10, FALSE, 5, NULL, NULL),
-('RESERVATION', 'PENDING', '2023-06-08 10:00:00', '2023-06-08 11:00:00', 2, 1, TRUE, 1, NULL, NULL),
-('SESSION', 'COMPLETED', '2023-06-08 12:00:00', '2023-06-08 13:30:00', 4, 3, FALSE, 2, NULL, NULL),
-('RESERVATION', 'CANCELLED', '2023-06-09 15:00:00', '2023-06-09 16:00:00', 6, 3, TRUE, 2, NULL, NULL),
-('SESSION', 'PENDING', '2023-06-10 08:00:00', '2023-06-10 09:30:00', 4, 4, FALSE, 2, NULL, NULL),
-('RESERVATION', 'PENDING', '2023-06-11 09:00:00', '2023-06-11 10:00:00', 3, 5, TRUE, 3, NULL, NULL),
-('SESSION', 'COMPLETED', '2023-06-11 11:00:00', '2023-06-11 12:30:00', 4, 7, FALSE, 4, NULL, NULL),
-('RESERVATION', 'CANCELLED', '2023-06-12 14:00:00', '2023-06-12 15:00:00', 5, 9, TRUE, 5, NULL, NULL),
-('SESSION', 'PENDING', '2023-06-13 08:00:00', '2023-06-13 09:30:00', 4, 10, FALSE, 5, NULL, NULL);
+-- Additional reservations for club_id 1
+('RESERVATION', 'PENDING', '2024-06-03 10:00:00', '2024-06-03 11:00:00', 4, 1, TRUE, 1, 1, NULL),
+('SESSION', 'PENDING', '2024-06-03 11:30:00', '2024-06-03 12:30:00', 4, 2, TRUE, 1, 2, NULL),
+('RESERVATION', 'PENDING', '2024-06-03 13:00:00', '2024-06-03 14:00:00', 4, 3, TRUE, 1, 3, NULL),
+('SESSION', 'PENDING', '2024-06-03 14:30:00', '2024-06-03 15:30:00', 4, 4, TRUE, 1, 4, NULL),
 
--- Insert sample data into Users_Reservations
+-- Additional reservations for club_id 2
+('RESERVATION', 'PENDING', '2024-06-04 10:00:00', '2024-06-04 11:00:00', 4, 5, TRUE, 2, 5, NULL),
+('SESSION', 'PENDING', '2024-06-04 11:30:00', '2024-06-04 12:30:00', 4, 6, TRUE, 2, 6, NULL),
+('RESERVATION', 'PENDING', '2024-06-04 13:00:00', '2024-06-04 14:00:00', 4, 7, TRUE, 2, 7, NULL),
+('SESSION', 'PENDING', '2024-06-04 14:30:00', '2024-06-04 15:30:00', 4, 8, TRUE, 2, 8, NULL),
+
+-- Additional reservations for club_id 3
+('RESERVATION', 'PENDING', '2024-06-05 10:00:00', '2024-06-05 11:00:00', 4, 9, TRUE, 3, 8, NULL),
+('SESSION', 'PENDING', '2024-06-05 11:30:00', '2024-06-05 12:30:00', 4, 10, TRUE, 3, 9, NULL),
+('RESERVATION', 'PENDING', '2024-06-05 13:00:00', '2024-06-05 14:00:00', 4, 1, TRUE, 3, 1, NULL),
+('SESSION', 'PENDING', '2024-06-05 14:30:00', '2024-06-05 15:30:00', 4, 2, TRUE, 3, 2, NULL),
+
+-- Additional reservations for club_id 4
+('RESERVATION', 'PENDING', '2024-06-06 10:00:00', '2024-06-06 11:00:00', 4, 3, TRUE, 4, 3, NULL),
+('SESSION', 'PENDING', '2024-06-06 11:30:00', '2024-06-06 12:30:00', 4, 4, TRUE, 4, 4, NULL),
+('RESERVATION', 'PENDING', '2024-06-06 13:00:00', '2024-06-06 14:00:00', 4, 5, TRUE, 4, 5, NULL),
+('SESSION', 'PENDING', '2024-06-06 14:30:00', '2024-06-06 15:30:00', 4, 6, TRUE, 4, 6, NULL),
+
+-- Additional reservations for club_id 5
+('RESERVATION', 'PENDING', '2024-06-07 10:00:00', '2024-06-07 11:00:00', 4, 7, TRUE, 5, 7, NULL),
+('SESSION', 'PENDING', '2024-06-07 11:30:00', '2024-06-07 12:30:00', 4, 8, TRUE, 5, 8, NULL),
+('RESERVATION', 'PENDING', '2024-06-07 13:00:00', '2024-06-07 14:00:00', 4, 9, TRUE, 5, 9, NULL),
+('SESSION', 'PENDING', '2024-06-07 14:30:00', '2024-06-07 15:30:00', 4, 10, TRUE, 5, 10, NULL);
+
+
+-- Link users to the reservations, ensuring no overlaps
+-- Link users to the reservations, ensuring no overlaps
 INSERT INTO Users_Reservations (user_id, res_id, absence)
 VALUES
+-- Assigning users to club_id 1 reservations
 (1, 1000000, FALSE),
-(2, 1000001, TRUE),
+(2, 1000001, FALSE),
 (3, 1000002, FALSE),
 (4, 1000003, FALSE),
+
+-- Assigning users to club_id 2 reservations
 (5, 1000004, FALSE),
-(6, 1000005, TRUE),
+(6, 1000005, FALSE),
 (7, 1000006, FALSE),
 (8, 1000007, FALSE),
+
+-- Assigning users to club_id 3 reservations
 (9, 1000008, FALSE),
-(10, 1000009, TRUE),
-(11, 1000010, FALSE),
-(12, 1000011, FALSE),
-(13, 1000012, FALSE),
-(14, 1000013, TRUE),
-(15, 1000014, FALSE);
+(10, 1000009, FALSE),
+(1, 1000010, FALSE),
+(2, 1000011, FALSE),
+
+-- Assigning users to club_id 4 reservations
+(3, 1000012, FALSE),
+(4, 1000013, FALSE),
+(5, 1000014, FALSE),
+(6, 1000015, FALSE),
+
+-- Assigning users to club_id 5 reservations
+(7, 1000016, FALSE),
+(8, 1000017, FALSE),
+(9, 1000018, FALSE),
+(10, 1000019, FALSE);
+
+
 
 -- Insert sample data into Employees_Clubs
 INSERT INTO Employees_Clubs (employee_id, club_id, employee_type, cv_file, years_of_experience)
