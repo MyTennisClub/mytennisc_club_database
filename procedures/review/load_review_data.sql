@@ -11,7 +11,9 @@ BEGIN
         su.user_id,
         cu.review_description,
         cu.review_likes,
-        cu.review_check
+        cu.review_check,
+        cu.review_date,
+        cu.review_stars
     FROM
         Clubs_Users cu
     JOIN

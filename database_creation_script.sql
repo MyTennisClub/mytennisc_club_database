@@ -671,7 +671,9 @@ BEGIN
         su.user_id,
         cu.review_description,
         cu.review_likes,
-        cu.review_check
+        cu.review_check,
+        cu.review_date,
+        cu.review_stars
     FROM
         Clubs_Users cu
     JOIN
@@ -724,4 +726,21 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END $$
+DELIMITER ;
+
+
+
+DROP PROCEDURE IF EXISTS remove_like;
+DELIMITER $$
+
+CREATE PROCEDURE remove_like(
+    IN p_user_id INT,
+    IN p_tennis_club_id INT
+)
+BEGIN
+    UPDATE Clubs_Users
+    SET review_likes = review_likes - 1
+    WHERE user_id = p_user_id AND club_id = p_tennis_club_id;
+END$$
+
 DELIMITER ;
