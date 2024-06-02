@@ -765,37 +765,6 @@ END$$
 
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS CreatePrivateCoachSession;
-DELIMITER $$
-CREATE PROCEDURE CreatePrivateCoachSession (
-    IN p_coach_id INT,
-    IN p_club_id INT,
-    IN p_court_id INT,
-    IN p_res_start_date DATETIME,
-    IN p_res_end_date DATETIME,
-    IN p_res_no_people INT
-)
-BEGIN
-   -- Inserting a new session into CourtReservations
-    INSERT INTO CourtReservations (
-        res_type, res_status, res_start_date, res_end_date, res_no_people,
-        res_court_id, res_equipment, res_club_id, res_sec_scan, res_qr_code
-    ) VALUES (
-        'RESERVATION', 'PENDING', p_res_start_date, p_res_end_date, p_res_no_people,
-        p_court_id, FALSE, p_club_id, NULL, NULL
-    );
-
-    -- Fetching the last inserted session id
-    SET @last_res_id = LAST_INSERT_ID();
-
-    -- Inserting the coach into the Users_Reservations table
-    INSERT INTO Users_Reservations (user_id, res_id, absence)
-    VALUES (p_coach_id, @last_res_id, FALSE);
-END $$
-DELIMITER ;
-
-
-
 DROP PROCEDURE IF EXISTS GetCoachPendingReservationsAndSessions;
 DELIMITER $$
 CREATE PROCEDURE GetCoachPendingReservationsAndSessions (
@@ -852,3 +821,107 @@ BEGIN
         cr.res_start_date ASC;
 END$$
 DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS CreatePrivateCoachSession;
+DELIMITER $$
+CREATE PROCEDURE CreatePrivateCoachSession (
+    IN p_club_id INT,
+    IN p_court_id INT,
+    IN p_res_start_date DATETIME,
+    IN p_res_end_date DATETIME,
+    IN p_res_no_people INT,
+    IN p_coach_id TEXT,
+    IN p_member_id TEXT
+)
+BEGIN
+    DECLARE users_list TEXT;
+    INSERT INTO CourtReservations (res_type, res_status, res_start_date, res_end_date, res_no_people, res_court_id, res_equipment, res_club_id)
+    VALUES ('RESERVATION', 'PENDING', p_res_start_date, p_res_end_date, p_res_no_people,p_court_id, TRUE, p_club_id);
+
+    if P_member_id is not null then
+        set users_list =  CONCAT(p_coach_id, ',', p_member_id);
+    else
+        set users_list = p_coach_id;
+    end if;
+
+    SET @last_res_id = LAST_INSERT_ID();
+
+    insert into Users_Reservations(user_id, res_id, absence)
+    select user_id, @last_res_id, FALSE from SimpleUsers where find_in_set(user_id, users_list);
+
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS BookCourt;
+DELIMITER $$
+CREATE PROCEDURE BookCourt (
+    IN p_club_id INT,
+    IN p_court_id INT,
+    IN p_res_start_date DATETIME,
+    IN p_res_end_date DATETIME,
+    IN p_res_no_people INT,
+    IN p_member_id INT,
+    IN p_with_equipment BOOLEAN,
+    IN p_qr_image BLOB
+)
+BEGIN
+    DECLARE users_list TEXT;
+    INSERT INTO CourtReservations (res_type, res_status, res_start_date, res_end_date, res_no_people, res_court_id, res_equipment, res_club_id, res_qr_code)
+    VALUES ('RESERVATION', 'PENDING', p_res_start_date, p_res_end_date, p_res_no_people,p_court_id, p_with_equipment, p_club_id,p_qr_image);
+
+    SET @last_res_id = LAST_INSERT_ID();
+
+    insert into Users_Reservations(user_id, res_id, absence)
+    values (p_member_id, @last_res_id, FALSE);
+
+END $$
+DELIMITER ;
+
+drop procedure if exists CheckUserClubMembership;
+DELIMITER $$
+create procedure CheckUserClubMembership(
+    IN p_user_id INT,
+    IN p_club_id INT,
+    OUT p_is_member BOOLEAN
+)
+begin
+    set p_is_member = false;
+    if exists(
+        select 1 from clubs_users where user_id = p_user_id and p_club_id = club_id and  user_type = 'GUEST'
+    ) then
+        set p_is_member = true;
+    end if;
+
+end$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE TRIGGER check_availability_before_insert
+BEFORE INSERT ON CourtReservations
+FOR EACH ROW
+BEGIN
+    DECLARE overlap_count INT;
+
+    SELECT COUNT(*)
+    INTO overlap_count
+    FROM CourtReservations
+    WHERE res_court_id = NEW.res_court_id
+    AND (
+        (NEW.res_start_date BETWEEN res_start_date AND res_end_date)
+        OR (NEW.res_end_date BETWEEN res_start_date AND res_end_date)
+        OR (res_start_date BETWEEN NEW.res_start_date AND NEW.res_end_date)
+        OR (res_end_date BETWEEN NEW.res_start_date AND NEW.res_end_date)
+    )
+    AND res_status != 'CANCELLED';
+
+    IF overlap_count > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Cannot insert overlapping reservation.';
+    END IF;
+END$$
+DELIMITER ;
+
+
+
