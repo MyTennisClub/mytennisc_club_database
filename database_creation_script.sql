@@ -764,11 +764,8 @@ END$$
 
 DELIMITER ;
 
-
-
 DROP PROCEDURE IF EXISTS CreatePrivateCoachSession;
--- Procedure to create a private session for a coach
-DELIMITER //
+DELIMITER $$
 CREATE PROCEDURE CreatePrivateCoachSession (
     IN p_coach_id INT,
     IN p_club_id INT,
@@ -793,11 +790,8 @@ BEGIN
     -- Inserting the coach into the Users_Reservations table
     INSERT INTO Users_Reservations (user_id, res_id, absence)
     VALUES (p_coach_id, @last_res_id, FALSE);
-END;
-//
+END $$
 DELIMITER ;
-
-
 
 
 
